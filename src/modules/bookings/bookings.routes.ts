@@ -4,6 +4,8 @@ import { validate } from "../../shared/http/validate";
 import { asyncHandler } from "../../shared/http/asyncHandler";
 import { bookingsController } from "./bookings.controller";
 import { requireAuth } from "../../shared/middleware/auth.middleware";
+import { createClientBookingController } from "./bookings.createClient.controller";
+import { listClientBookingsController } from "./bookings.listClient.controller";
 
 const router = Router();
 
@@ -21,6 +23,17 @@ const idSchema = z.object({
   query: z.any().optional()
 });
 
+const createClientSchema = z.object({
+  body: z.object({
+    scheduledAt: z.string().min(1),
+    roomId: z.number().int().positive()
+  }),
+  params: z.any().optional(),
+  query: z.any().optional()
+});
+
+router.get("/bookings", requireAuth(["CLIENT"]), asyncHandler(listClientBookingsController.handle));
+router.post("/bookings", requireAuth(["CLIENT"]), validate(createClientSchema), asyncHandler(createClientBookingController.handle));
 router.get("/admin/bookings", requireAuth(["ADMIN"]), validate(listSchema), asyncHandler(bookingsController.list));
 router.patch("/admin/bookings/:id/confirm", requireAuth(["ADMIN"]), validate(idSchema), asyncHandler(bookingsController.confirm));
 router.patch("/admin/bookings/:id/cancel", requireAuth(["ADMIN"]), validate(idSchema), asyncHandler(bookingsController.cancel));

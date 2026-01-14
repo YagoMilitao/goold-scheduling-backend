@@ -1,10 +1,5 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
-export const hashPassword = async (plain: string) => {
-  const saltRounds = 10;
-  return bcrypt.hash(plain, saltRounds);
-};
+export const hashPassword = async (plain: string) => bcrypt.hash(plain, 10);
 
-export const comparePassword = async (plain: string, hash: string) => {
-  return bcrypt.compare(plain, hash);
-};
+export const comparePassword = async (plain: string, hash: string) => bcrypt.compare(plain, hash);
