@@ -1,0 +1,50 @@
+{
+  "name": "goold-scheduling-backend",
+  "version": "1.0.0",
+  "description": "<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->\r <a id=\"readme-top\"></a>\r <!--\r *** Thanks for checking out the Best-README-Template. If you have a suggestion\r *** that would make this better, please fork the repo and create a pull request\r *** or simply open an issue with the tag \"enhancement\".\r *** Don't forget to give the project a star!\r *** Thanks again! Now go create something AMAZING! :D\r -->",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "sequelize:init": "sequelize-cli init",
+    "db:migrate": "sequelize-cli db:migrate",
+    "db:seed": "sequelize-cli db:seed:all",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YagoMilitao/goold-scheduling-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/YagoMilitao/goold-scheduling-backend/issues"
+  },
+  "homepage": "https://github.com/YagoMilitao/goold-scheduling-backend#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "morgan": "^1.10.1",
+    "mysql2": "^3.16.0",
+    "sequelize": "^6.37.7",
+    "zod": "^4.3.5"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^25.0.8",
+    "sequelize-cli": "^6.6.5",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
+  }
+}
