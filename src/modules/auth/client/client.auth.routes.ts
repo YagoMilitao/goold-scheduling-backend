@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
-import { validate } from "../../shared/http/validate";
-import { asyncHandler } from "../../shared/http/asyncHandler";
+import { validate } from "../../../shared/http/validate";
+import { asyncHandler } from "../../../shared/http/asyncHandler";
 import { clientAuthController } from "./client.auth.controller";
 
 

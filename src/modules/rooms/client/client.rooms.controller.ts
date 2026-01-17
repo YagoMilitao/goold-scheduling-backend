@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { roomsService } from "./rooms.service";
+import { roomsService } from "../rooms.service";
 
-export const roomsController = {
+export const clientRoomsController = {
   async list(_req: Request, res: Response) {
     const items = await roomsService.list();
     res.status(200).json({ items });

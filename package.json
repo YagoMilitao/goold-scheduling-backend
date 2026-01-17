@@ -10,6 +10,7 @@
     "sequelize:init": "sequelize-cli init",
     "db:migrate": "sequelize-cli db:migrate",
     "db:seed": "sequelize-cli db:seed:all",
+    "seed:rooms": "ts-node src/shared/seeds/runSeeds.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

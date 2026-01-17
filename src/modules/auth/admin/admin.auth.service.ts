@@ -1,11 +1,11 @@
 import jwt from "jsonwebtoken";
-import { env } from "../../config/env";
-import { AppError } from "../../shared/errors/AppError";
-import { comparePassword } from "../../shared/utils/password";
-import { User } from "../../models/User";
-import { JwtPayload } from "./auth.types";
+import { env } from "../../../config/env";
+import { AppError } from "../../../shared/errors/AppError";
+import { comparePassword } from "../../../shared/utils/password";
+import { User } from "../../../models/User";
+import { JwtPayload } from "./admin.auth.types";
 
-export const authService = {
+export const adminAuthService = {
   async loginAdmin(email: string, password: string) {
     const user = await User.findOne({ where: { email } });
 

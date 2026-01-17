@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
-import { env } from "../../config/env";
-import { AppError } from "../../shared/errors/AppError";
-import { comparePassword, hashPassword } from "../../shared/utils/password";
-import { User } from "../../models/User";
-import { JwtPayload } from "./auth.types";
+import { env } from "../../../config/env";
+import { AppError } from "../../../shared/errors/AppError";
+import { comparePassword, hashPassword } from "../../../shared/utils/password";
+import { User } from "../../../models/User";
+import { JwtPayload } from "../admin/admin.auth.types";
 
 export const clientAuthService = {
   async emailExists(email: string) {

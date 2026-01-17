@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { env } from "../../config/env";
 import { AppError } from "../errors/AppError";
-import { JwtPayload } from "../../modules/auth/auth.types";
+import { JwtPayload } from "../../modules/auth/admin/admin.auth.types";
 
 export const requireAuth =
   (roles?: Array<JwtPayload["role"]>) =>

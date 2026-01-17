@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { clientAuthService } from "./client.auth.service";
 
+
 export const clientAuthController = {
   async emailExists(req: Request, res: Response) {
     const email = String(req.query.email ?? "");

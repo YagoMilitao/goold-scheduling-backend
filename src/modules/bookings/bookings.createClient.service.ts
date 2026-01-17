@@ -1,6 +1,7 @@
 import { Booking } from "../../models/Booking";
 import { Room } from "../../models/Room";
 import { AppError } from "../../shared/errors/AppError";
+import { Op } from "sequelize";
 
 const timeToMinutes = (t: string) => {
   const [h, m] = t.split(":").map(Number);
@@ -9,13 +10,20 @@ const timeToMinutes = (t: string) => {
 
 const dateToMinutes = (d: Date) => d.getHours() * 60 + d.getMinutes();
 
+const buildLocalDate = (date: string, time: string) => {
+  const [y, mo, da] = date.split("-").map(Number);
+  const [hh, mm] = time.split(":").map(Number);
+  const dt = new Date(y, mo - 1, da, hh, mm, 0, 0);
+  if (Number.isNaN(dt.getTime())) throw new AppError("Data/hora inválida", 422);
+  return dt;
+};
+
 export const createClientBookingService = {
-  async execute(input: { scheduledAt: string; roomId: number; userId: number }) {
+  async execute(input: { date: string; time: string; roomId: number; userId: number }) {
     const room = await Room.findByPk(input.roomId);
     if (!room) throw new AppError("Sala não encontrada", 404);
 
-    const scheduled = new Date(input.scheduledAt);
-    if (Number.isNaN(scheduled.getTime())) throw new AppError("Data/hora inválida", 422);
+    const scheduled = buildLocalDate(input.date, input.time);
 
     const start = timeToMinutes(room.startTime);
     const end = timeToMinutes(room.endTime);
@@ -31,7 +39,7 @@ export const createClientBookingService = {
       where: {
         roomId: room.id,
         scheduledAt: scheduled,
-        status: ["EM_ANALISE", "AGENDADO"]
+        status: { [Op.in]: ["EM_ANALISE", "AGENDADO"] }
       }
     });
 

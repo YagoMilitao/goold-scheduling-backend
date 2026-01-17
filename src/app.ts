@@ -2,10 +2,11 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
-import authRoutes from "./modules/auth/auth.routes";
+import authRoutes from "./modules/auth/admin/admin.auth.routes";
 import bookingsRoutes from "./modules/bookings/bookings.routes";
 import { errorMiddleware } from "./shared/middleware/error.middleware";
-import clientAuthRoutes from "./modules/auth/client.auth.routes";
+import clientAuthRoutes from "./modules/auth/client/client.auth.routes";
+import roomsRoutes from "./modules/rooms/rooms.routes";
 
 export const createApp = () => {
   const app = express();
@@ -26,7 +27,8 @@ export const createApp = () => {
   app.use("/api", authRoutes);
   app.use("/api", bookingsRoutes);
   app.use("/api", clientAuthRoutes);
-  
+  app.use("/api", roomsRoutes);
+
   app.use(errorMiddleware);
 
   return app;
