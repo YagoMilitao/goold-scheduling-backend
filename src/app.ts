@@ -8,6 +8,7 @@ import { errorMiddleware } from "./shared/middleware/error.middleware";
 import clientAuthRoutes from "./modules/auth/client/client.auth.routes";
 import roomsRoutes from "./modules/rooms/rooms.routes";
 import clientLogsRoutes from "./modules/logs/client/client.logs.routes";
+import meRoutes from "./modules/me/me.routes";
 
 export const createApp = () => {
   const app = express();
@@ -30,6 +31,7 @@ export const createApp = () => {
   app.use("/api", clientAuthRoutes);
   app.use("/api", roomsRoutes);
   app.use("/api", clientLogsRoutes);
+  app.use("/api", meRoutes);
 
   app.use(errorMiddleware);
 

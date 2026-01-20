@@ -6,7 +6,7 @@ import { createApp } from "./app";
 const bootstrap = async () => {
   await sequelize.authenticate();
 
-  await sequelize.sync();
+  await sequelize.sync({alter: true});
   const app = createApp();
 
   app.listen(env.port, () => {

@@ -6,6 +6,7 @@ import { bookingsController } from "./bookings.controller";
 import { requireAuth } from "../../shared/middleware/auth.middleware";
 import { createClientBookingController } from "./bookings.createClient.controller";
 import { listClientBookingsController } from "./bookings.listClient.controller";
+import { cancelClientBookingController } from "./bookings.cancelClient.controller";
 
 const router = Router();
 
@@ -33,10 +34,17 @@ const createClientSchema = z.object({
   query: z.any().optional()
 });
 
+const clientCancelSchema = z.object({
+  params: z.object({ id: z.string().regex(/^\d+$/) }),
+  body: z.any().optional(),
+  query: z.any().optional()
+});
+
 router.get("/bookings", requireAuth(["CLIENT"]), asyncHandler(listClientBookingsController.handle));
 router.post("/bookings", requireAuth(["CLIENT"]), validate(createClientSchema), asyncHandler(createClientBookingController.handle));
 router.get("/admin/bookings", requireAuth(["ADMIN"]), validate(listSchema), asyncHandler(bookingsController.list));
 router.patch("/admin/bookings/:id/confirm", requireAuth(["ADMIN"]), validate(idSchema), asyncHandler(bookingsController.confirm));
 router.patch("/admin/bookings/:id/cancel", requireAuth(["ADMIN"]), validate(idSchema), asyncHandler(bookingsController.cancel));
+router.patch("/bookings/:id/cancel",requireAuth(["CLIENT"]),validate(clientCancelSchema),asyncHandler(cancelClientBookingController.handle));
 
 export default router;

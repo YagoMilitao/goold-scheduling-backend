@@ -47,6 +47,16 @@ export const clientAuthController = {
   });
 
   res.status(201).json(result);
-}
-  
+  },
+
+  async logout(req: Request, res: Response) {
+   const userId = (req as any).auth.sub as number;
+   await logsService.create({
+     userId,
+     module: "MINHA_CONTA",
+     activityType: "Logout"
+   });
+   res.status(204).send();
+  }
+
 };

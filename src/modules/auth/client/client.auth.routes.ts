@@ -3,6 +3,7 @@ import { z } from "zod";
 import { validate } from "../../../shared/http/validate";
 import { asyncHandler } from "../../../shared/http/asyncHandler";
 import { clientAuthController } from "./client.auth.controller";
+import { requireAuth } from "../../../shared/middleware/auth.middleware";
 
 
 const router = Router();
@@ -38,5 +39,6 @@ const registerSchema = z.object({
 router.get("/auth/email-exists", asyncHandler(clientAuthController.emailExists));
 router.post("/auth/login", validate(loginSchema), asyncHandler(clientAuthController.login));
 router.post("/auth/register", validate(registerSchema), asyncHandler(clientAuthController.register));
+router.post("/auth/logout", requireAuth(["CLIENT"]), asyncHandler(clientAuthController.logout));
 
 export default router;

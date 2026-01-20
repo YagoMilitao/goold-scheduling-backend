@@ -15,6 +15,9 @@ export class User extends Model {
   declare neighborhood: string | null;
   declare city: string | null;
   declare state: string | null;
+  declare canViewBookings: boolean;
+  declare canViewLogs: boolean;
+  declare isActive: boolean;
   declare createdAt: Date;
   declare updatedAt: Date;
 }
@@ -34,7 +37,11 @@ User.init(
     complement: { type: DataTypes.STRING(80), allowNull: true },
     neighborhood: { type: DataTypes.STRING(120), allowNull: true },
     city: { type: DataTypes.STRING(120), allowNull: true },
-    state: { type: DataTypes.STRING(120), allowNull: true }
+    state: { type: DataTypes.STRING(120), allowNull: true },
+
+    canViewBookings: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
+    canViewLogs: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
+    isActive: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true }
   },
   { sequelize, tableName: "users" }
 );
