@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { clientAuthService } from "./client.auth.service";
+import { logsService } from "../../logs/logs.service";
 
 
 export const clientAuthController = {
@@ -12,7 +13,13 @@ export const clientAuthController = {
   async login(req: Request, res: Response) {
     const { email, password } = (req as any).validated.body as { email: string; password: string };
     const result = await clientAuthService.login(email, password);
+    await logsService.create({
+    userId: result.user.id,
+    module: "MINHA_CONTA",
+    activityType: "Login"
+  });
     res.status(200).json(result);
+    
   },
 
   async register(req: Request, res: Response) {
@@ -33,7 +40,13 @@ export const clientAuthController = {
     complement
   });
 
+  await logsService.create({
+    userId: result.user.id,
+    module: "MINHA_CONTA",
+    activityType: "Cadastro"
+  });
+
   res.status(201).json(result);
 }
-
+  
 };

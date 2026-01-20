@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { createClientBookingService } from "./bookings.createClient.service";
+import { logsService } from "../logs/logs.service";
 
 export const createClientBookingController = {
   async handle(req: Request, res: Response) {
@@ -11,6 +12,13 @@ export const createClientBookingController = {
     const userId = (req as any).auth.sub as number;
 
     const result = await createClientBookingService.execute({ date, time, roomId, userId });
+
+    await logsService.create({
+      userId,
+      module: "AGENDAMENTOS",
+      activityType: "Criação de agendamento",
+      meta: { bookingId: result.id, roomId, date, time }
+    });
 
     res.status(201).json(result);
   }
