@@ -9,6 +9,8 @@ import clientAuthRoutes from "./modules/auth/client/client.auth.routes";
 import roomsRoutes from "./modules/rooms/rooms.routes";
 import clientLogsRoutes from "./modules/logs/client/client.logs.routes";
 import meRoutes from "./modules/me/me.routes";
+import adminClientsRoutes from "./modules/clients/admin/admin.clients.routes";
+import adminLogsRoutes from "./modules/logs/admin/admin.logs.routes";
 
 export const createApp = () => {
   const app = express();
@@ -32,6 +34,8 @@ export const createApp = () => {
   app.use("/api", roomsRoutes);
   app.use("/api", clientLogsRoutes);
   app.use("/api", meRoutes);
+  app.use("/api", adminClientsRoutes);
+  app.use("/api", adminLogsRoutes);
 
   app.use(errorMiddleware);
 
