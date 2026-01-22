@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { SignOptions } from "jsonwebtoken";
+import { Secret, SignOptions } from "jsonwebtoken";
 
 dotenv.config();
 
@@ -22,8 +22,7 @@ export const env = {
   },
 
   jwt: {
-    secret: required("JWT_SECRET"),
+    secret: required("JWT_SECRET") as Secret,
     expiresIn: (process.env.JWT_EXPIRES_IN ?? "1d") as SignOptions["expiresIn"]
   }
 };
-console.log("DB_HOST =", process.env.DB_HOST);
