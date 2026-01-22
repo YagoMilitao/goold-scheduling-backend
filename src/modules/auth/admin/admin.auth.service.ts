@@ -3,7 +3,8 @@ import { env } from "../../../config/env";
 import { AppError } from "../../../shared/errors/AppError";
 import { comparePassword } from "../../../shared/utils/password";
 import { User } from "../../../models/User";
-import { JwtPayload } from "./admin.auth.types";
+import { JwtPayload } from "../auth.types";
+
 
 export const adminAuthService = {
   async loginAdmin(email: string, password: string) {
