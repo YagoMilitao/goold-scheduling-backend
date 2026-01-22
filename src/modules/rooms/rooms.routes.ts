@@ -30,7 +30,6 @@ const availableSchema = z.object({
   })
 });
 
-
 router.get(
   "/rooms/available",
   requireAuth(["CLIENT"]),
@@ -43,7 +42,7 @@ router.get(
 );
 
 
-router.get("/rooms", asyncHandler(clientRoomsController.list));
+router.get("/rooms", requireAuth(["CLIENT", "ADMIN"]), asyncHandler(clientRoomsController.list));
 router.get("/admin/rooms", requireAuth(["ADMIN"]), asyncHandler(clientRoomsController.list));
 router.post("/admin/rooms", requireAuth(["ADMIN"]), validate(createSchema), asyncHandler(clientRoomsController.create));
 

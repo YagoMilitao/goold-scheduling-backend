@@ -1,21 +1,26 @@
 import { Request, Response } from "express";
-import { roomsService } from "../rooms.service";
+import { Room } from "../../../models/Room";
 
 export const clientRoomsController = {
   async list(_req: Request, res: Response) {
-    const items = await roomsService.list();
-    res.status(200).json({ items });
+    const rooms = await Room.findAll({
+      attributes: ["id", "name", "startTime", "endTime", "slotMinutes"],
+      order: [["id", "ASC"]]
+    });
+
+    return res.status(200).json({ items: rooms });
   },
 
   async create(req: Request, res: Response) {
-    const { name, startTime, endTime, slotMinutes } = (req as any).validated.body as {
-      name: string;
-      startTime: string;
-      endTime: string;
-      slotMinutes: number;
-    };
+    const body = (req as any).validated?.body ?? req.body;
 
-    const room = await roomsService.create({ name, startTime, endTime, slotMinutes });
-    res.status(201).json(room);
+    const created = await Room.create({
+      name: body.name,
+      startTime: body.startTime,
+      endTime: body.endTime,
+      slotMinutes: body.slotMinutes
+    });
+
+    return res.status(201).json({ item: created });
   }
 };
