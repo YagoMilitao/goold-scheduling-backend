@@ -6,11 +6,18 @@ import { createApp } from "./app";
 const bootstrap = async () => {
   await sequelize.authenticate();
 
-  await sequelize.sync({alter: true});
+  const isProd = env.nodeEnv === "production";
+
+  if (!isProd) {
+    await sequelize.sync({ alter: true });
+  }
+
   const app = createApp();
 
-  app.listen(env.port, () => {
-    console.log(`API running on port ${env.port}`);
+  const port = Number(process.env.PORT || env.port || 3001);
+
+  app.listen(port, () => {
+    console.log(`API running on port ${port}`);
   });
 };
 

@@ -1,8 +1,6 @@
 import { Sequelize } from "sequelize";
 import { env } from "./env";
 
-console.log("DB CONFIG =>", env.db);
-
 export const sequelize = new Sequelize(
   env.db.name,
   env.db.user, 
@@ -11,6 +9,9 @@ export const sequelize = new Sequelize(
     host: env.db.host,
     port: env.db.port,
     dialect: "mysql",
-    logging: false
+    logging: false,
+    dialectOptions: {
+      connectTimeout: 30000
+    }
   }
 );
