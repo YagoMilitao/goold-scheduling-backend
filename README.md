@@ -110,7 +110,12 @@ This section should list any major frameworks/libraries used to bootstrap your p
 * [![Angular][Angular.io]][Angular-url]
 * [![Svelte][Svelte.dev]][Svelte-url]
 * [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
+* [![mysql][Laravel.com]][Laravel-url]
+* [![Node][Laravel.com]][Laravel-url]
+* [![Typescript][Laravel.com]][Laravel-url]
+* [![Jest][Laravel.com]][Laravel-url]
+* [![Zod][Laravel.com]][Laravel-url]
+* [![Sequelize][Bootstrap.com]][Bootstrap-url]
 * [![JQuery][JQuery.com]][JQuery-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -278,4 +283,6 @@ Use this space to list resources you find helpful and would like to give credit 
 [Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
 [Bootstrap-url]: https://getbootstrap.com
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
-[JQuery-url]: https://jquery.com 
+[JQuery-url]: https://jquery.com
+[Node.com]: https://img.shields.io/node/v/:packageName
+[Node-url]: https://nodejs.org/pt-br
