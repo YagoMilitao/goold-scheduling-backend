@@ -1,7 +1,8 @@
 import dotenv from "dotenv";
 import { Secret, SignOptions } from "jsonwebtoken";
 
-dotenv.config();
+const path = process.env.DOTENV_CONFIG_PATH ?? (process.env.NODE_ENV === "test" ? ".env.test" : ".env");
+dotenv.config({ path });
 
 const required = (key: string) => {
   const value = process.env[key];

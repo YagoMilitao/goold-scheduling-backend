@@ -1,15 +1,24 @@
+version: "3.9"
+
 services:
   mysql_test:
     image: mysql:8.0
     container_name: goold_mysql_test
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: portal_agendamentos_test
+      MYSQL_DATABASE: railway_test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
     ports:
       - "3307:3306"
-    command: ["--default-authentication-plugin=mysql_native_password"]
+    volumes:
+      - mysql_test_data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
       interval: 3s
       timeout: 3s
       retries: 30
+
+volumes:
+  mysql_test_data:

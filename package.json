@@ -11,9 +11,11 @@
     "db:migrate": "sequelize-cli db:migrate",
     "db:seed": "sequelize-cli db:seed:all",
     "seed:rooms": "ts-node src/shared/seeds/runSeeds.ts",
-    "test": "jest --runInBand",
-    "test:watch": "jest --watch"
-
+    "test": "cross-env NODE_ENV=test DOTENV_CONFIG_PATH=.env.test jest --runInBand",
+    "test:watch": "jest --watch",
+    "test:db:up": "docker compose -f docker-compose.test.yml up -d",
+    "test:db:down": "docker compose -f docker-compose.test.yml down -v",
+    "test:all": "npm run test:db:up && npm test"
   },
   "repository": {
     "type": "git",
@@ -31,7 +33,6 @@
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
@@ -50,6 +51,8 @@
     "@types/morgan": "^1.9.10",
     "@types/node": "^25.0.8",
     "@types/supertest": "^6.0.3",
+    "cross-env": "^10.1.0",
+    "dotenv": "^17.2.3",
     "jest": "^30.2.0",
     "sequelize-cli": "^6.6.5",
     "supertest": "^7.2.2",

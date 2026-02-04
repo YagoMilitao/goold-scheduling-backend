@@ -25,12 +25,32 @@ const idSchema = z.object({
   query: z.any().optional()
 });
 
+const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
+const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+
+// Aceita:
+// - "2026-02-02T10:00:00"
+// - "2026-02-02T10:00:00Z"
+// - "2026-02-02T10:00:00-03:00"
+const scheduledAtRegex =
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?$/;
+
 const createClientSchema = z.object({
-  body: z.object({
-    date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-    time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
-    roomId: z.number().int().positive()
-  }),
+  body: z
+    .object({
+      roomId: z.number().int().positive(),
+      scheduledAt: z.string().regex(scheduledAtRegex).optional(),
+      date: z.string().regex(dateRegex).optional(),
+      time: z.string().regex(timeRegex).optional()
+    })
+    .refine(
+      (b) => {
+        const hasScheduledAt = !!b.scheduledAt;
+        const hasDateTime = !!b.date && !!b.time;
+        return hasScheduledAt || hasDateTime;
+      },
+      { message: "Informe scheduledAt ou date+time" }
+    ),
   params: z.any().optional(),
   query: z.any().optional()
 });
@@ -41,11 +61,51 @@ const clientCancelSchema = z.object({
   query: z.any().optional()
 });
 
-router.get("/bookings", requireAuth(["CLIENT"]), requireActiveClient, requireClientPermission("canViewBookings"), asyncHandler(listClientBookingsController.handle));
-router.post("/bookings", requireAuth(["CLIENT"]), requireActiveClient, requireClientPermission("canViewBookings"), validate(createClientSchema), asyncHandler(createClientBookingController.handle));
-router.get("/admin/bookings", requireAuth(["ADMIN"]), validate(listSchema), asyncHandler(bookingsController.list));
-router.patch("/admin/bookings/:id/confirm", requireAuth(["ADMIN"]), validate(idSchema), asyncHandler(bookingsController.confirm));
-router.patch("/admin/bookings/:id/cancel", requireAuth(["ADMIN"]), validate(idSchema), asyncHandler(bookingsController.cancel));
-router.patch("/bookings/:id/cancel", requireAuth(["CLIENT"]), requireActiveClient, requireClientPermission("canViewBookings"), validate(clientCancelSchema), asyncHandler(cancelClientBookingController.handle));
+router.get(
+  "/bookings",
+  requireAuth(["CLIENT"]),
+  requireActiveClient,
+  requireClientPermission("canViewBookings"),
+  asyncHandler(listClientBookingsController.handle)
+);
+
+router.post(
+  "/bookings",
+  requireAuth(["CLIENT"]),
+  requireActiveClient,
+  requireClientPermission("canViewBookings"),
+  validate(createClientSchema),
+  asyncHandler(createClientBookingController.handle)
+);
+
+router.get(
+  "/admin/bookings",
+  requireAuth(["ADMIN"]),
+  validate(listSchema),
+  asyncHandler(bookingsController.list)
+);
+
+router.patch(
+  "/admin/bookings/:id/confirm",
+  requireAuth(["ADMIN"]),
+  validate(idSchema),
+  asyncHandler(bookingsController.confirm)
+);
+
+router.patch(
+  "/admin/bookings/:id/cancel",
+  requireAuth(["ADMIN"]),
+  validate(idSchema),
+  asyncHandler(bookingsController.cancel)
+);
+
+router.patch(
+  "/bookings/:id/cancel",
+  requireAuth(["CLIENT"]),
+  requireActiveClient,
+  requireClientPermission("canViewBookings"),
+  validate(clientCancelSchema),
+  asyncHandler(cancelClientBookingController.handle)
+);
 
 export default router;

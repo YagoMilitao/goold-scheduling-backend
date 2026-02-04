@@ -20,5 +20,5 @@ Room.init(
     endTime: { type: DataTypes.STRING(5), allowNull: false, defaultValue: "18:00" },
     slotMinutes: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false, defaultValue: 30 }
   },
-  { sequelize, tableName: "rooms" }
+  { sequelize, tableName: "rooms", timestamps: true }
 );
