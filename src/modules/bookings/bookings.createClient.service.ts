@@ -10,39 +10,28 @@ const timeToMinutes = (t: string) => {
 
 const dateToMinutes = (d: Date) => d.getHours() * 60 + d.getMinutes();
 
-const buildLocalDateFromDateTimeParts = (date: string, time: string) => {
+const buildLocalDate = (date: string, time: string) => {
   const [y, mo, da] = date.split("-").map(Number);
   const [hh, mm] = time.split(":").map(Number);
-  const dt = new Date(y, mo - 1, da, hh, mm, 0, 0);
-  if (Number.isNaN(dt.getTime())) throw new AppError("Data/hora inválida", 422);
-  return dt;
-};
 
-const buildDateFromScheduledAt = (scheduledAt: string) => {
-  const dt = new Date(scheduledAt);
-  if (Number.isNaN(dt.getTime())) throw new AppError("scheduledAt inválido", 422);
+  const dt = new Date(y, mo - 1, da, hh, mm, 0, 0);
+
+  if (Number.isNaN(dt.getTime())) throw new AppError("Data/hora inválida", 422);
+
   return dt;
 };
 
 export const createClientBookingService = {
-  async execute(input: {
-    roomId: number;
-    scheduledAt?: string;
-    date?: string;
-    time?: string;
-    userId: number;
-  }) {
+  async execute(input: { date: string; time: string; roomId: number; userId: number }) {
     const room = await Room.findByPk(input.roomId);
     if (!room) throw new AppError("Sala não encontrada", 404);
 
-    const scheduled =
-      input.scheduledAt
-        ? buildDateFromScheduledAt(input.scheduledAt)
-        : input.date && input.time
-          ? buildLocalDateFromDateTimeParts(input.date, input.time)
-          : null;
+    const scheduled = buildLocalDate(input.date, input.time);
 
-    if (!scheduled) throw new AppError("Informe scheduledAt ou date+time", 422);
+    const now = new Date();
+    if (scheduled.getTime() < now.getTime()) {
+      throw new AppError("Não é permitido agendar no passado", 422);
+    }
 
     const start = timeToMinutes(room.startTime);
     const end = timeToMinutes(room.endTime);

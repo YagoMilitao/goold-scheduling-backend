@@ -24,6 +24,7 @@ export const logsService = {
       id: r.id,
       activityType: r.activityType,
       module: r.module,
+      meta: r.meta ?? null,
       createdAt: r.createdAt
     }));
   }

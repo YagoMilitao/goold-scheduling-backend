@@ -2,16 +2,6 @@ import { sequelize } from "../src/config/database";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-beforeAll(async () => {
-  await waitForDb();
-  await sequelize.sync({ force: true });
-});
-
-afterAll(async () => {
-  await sequelize.close();
-});
-
-
 async function waitForDb(retries = 30) {
   let lastErr: unknown = null;
 
@@ -27,6 +17,15 @@ async function waitForDb(retries = 30) {
 
   throw lastErr instanceof Error ? lastErr : new Error("DB not ready");
 }
+
+beforeAll(async () => {
+  await waitForDb();
+  await sequelize.sync({ force: true });
+});
+
+afterAll(async () => {
+  await sequelize.close();
+});
 
 export async function connectTestDb() {
   await sequelize.authenticate();

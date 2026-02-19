@@ -2,37 +2,16 @@ import { http } from "../../test/testApp";
 import { createUser } from "../../test/factories/user.factory";
 import { loginAdmin, loginClient } from "../../test/helpers/auth.helper";
 
-/**
- * Gera um datetime local "amanhã" em HH:mm, mas retorna como string ISO-like
- * com timezone offset explícito (ex: 2026-02-03T10:00:00-03:00).
- *
- * Isso evita comportamento diferente entre ambientes (CI, Linux, timezone diferente, etc).
- */
-function buildTomorrowLocalDateTimeWithOffset(hour: number, minute: number) {
-  const d = new Date();
-  d.setDate(d.getDate() + 1);
-  d.setHours(hour, minute, 0, 0);
+jest.setTimeout(30000);
 
+function formatDate(d: Date) {
   const yyyy = d.getFullYear();
   const mm = String(d.getMonth() + 1).padStart(2, "0");
   const dd = String(d.getDate()).padStart(2, "0");
-  const hh = String(d.getHours()).padStart(2, "0");
-  const mi = String(d.getMinutes()).padStart(2, "0");
-  const ss = "00";
-
-  // getTimezoneOffset() retorna minutos para "UTC - Local"
-  // Ex: Brasil (-03:00) -> offset = 180
-  const offsetMinutes = d.getTimezoneOffset();
-  const sign = offsetMinutes <= 0 ? "+" : "-";
-  const abs = Math.abs(offsetMinutes);
-  const offH = String(Math.floor(abs / 60)).padStart(2, "0");
-  const offM = String(abs % 60).padStart(2, "0");
-
-  return `${yyyy}-${mm}-${dd}T${hh}:${mi}:${ss}${sign}${offH}:${offM}`;
+  return `${yyyy}-${mm}-${dd}`;
 }
 
 describe("Bookings flow", () => {
-  jest.setTimeout(20000); // Increase timeout to 20 seconds for slow HTTP tests
   it("CLIENT creates booking -> ADMIN confirms only EM_ANALISE -> CLIENT cancels", async () => {
     const uid = Date.now();
 
@@ -78,13 +57,16 @@ describe("Bookings flow", () => {
     const room = (listRoomsRes.body.items ?? []).find((r: any) => r.name === roomName);
     expect(room).toBeTruthy();
 
-    // IMPORTANT: envia scheduledAt com offset explícito (evita variação de timezone)
-    const scheduledAt = buildTomorrowLocalDateTimeWithOffset(10, 0);
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const date = formatDate(tomorrow);
+    const time = "10:00";
 
     const createRes = await http
       .post("/api/bookings")
       .set("Authorization", `Bearer ${clientLogin.token}`)
-      .send({ roomId: room.id, scheduledAt });
+      .send({ roomId: room.id, date, time });
 
     if (![200, 201].includes(createRes.status)) {
       console.log("Create booking failed:", createRes.status, JSON.stringify(createRes.body, null, 2));
@@ -166,12 +148,16 @@ describe("Bookings flow", () => {
     const room = (listRoomsRes.body.items ?? []).find((r: any) => r.name === roomName);
     expect(room).toBeTruthy();
 
-    const scheduledAt = buildTomorrowLocalDateTimeWithOffset(11, 0);
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const date = formatDate(tomorrow);
+    const time = "11:00";
 
     const createRes = await http
       .post("/api/bookings")
       .set("Authorization", `Bearer ${clientLogin.token}`)
-      .send({ roomId: room.id, scheduledAt });
+      .send({ roomId: room.id, date, time });
 
     if (![200, 201].includes(createRes.status)) {
       console.log("Create booking failed:", createRes.status, JSON.stringify(createRes.body, null, 2));

@@ -28,29 +28,25 @@ const idSchema = z.object({
 const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
-// Aceita:
-// - "2026-02-02T10:00:00"
-// - "2026-02-02T10:00:00Z"
-// - "2026-02-02T10:00:00-03:00"
 const scheduledAtRegex =
   /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?$/;
 
+// Caso 1: cliente manda date + time
+const createByDateTimeSchema = z.object({
+  roomId: z.number().int().positive(),
+  date: z.string().regex(dateRegex),
+  time: z.string().regex(timeRegex)
+});
+
+// Caso 2: cliente manda scheduledAt
+const createByScheduledAtSchema = z.object({
+  roomId: z.number().int().positive(),
+  scheduledAt: z.string().regex(scheduledAtRegex)
+});
+
+// body agora é UNION: ou um ou outro
 const createClientSchema = z.object({
-  body: z
-    .object({
-      roomId: z.number().int().positive(),
-      scheduledAt: z.string().regex(scheduledAtRegex).optional(),
-      date: z.string().regex(dateRegex).optional(),
-      time: z.string().regex(timeRegex).optional()
-    })
-    .refine(
-      (b) => {
-        const hasScheduledAt = !!b.scheduledAt;
-        const hasDateTime = !!b.date && !!b.time;
-        return hasScheduledAt || hasDateTime;
-      },
-      { message: "Informe scheduledAt ou date+time" }
-    ),
+  body: z.union([createByDateTimeSchema, createByScheduledAtSchema]),
   params: z.any().optional(),
   query: z.any().optional()
 });
