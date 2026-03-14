@@ -6,10 +6,15 @@ module.exports = {
   async up(queryInterface) {
     const now = new Date();
 
+    await queryInterface.sequelize.query("SET FOREIGN_KEY_CHECKS = 0");
+
+    await queryInterface.bulkDelete("logs", null, {});
     await queryInterface.bulkDelete("bookings", null, {});
     await queryInterface.bulkDelete("rooms", null, {});
     await queryInterface.bulkDelete("users", null, {});
 
+     await queryInterface.sequelize.query("SET FOREIGN_KEY_CHECKS = 1");
+     
     const adminHash = await bcrypt.hash("Admin@123", 10);
     const clientHash = await bcrypt.hash("Client@123", 10);
 
